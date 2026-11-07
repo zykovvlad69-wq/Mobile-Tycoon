@@ -1,0 +1,32 @@
+name: Сборка Mobile Tycoon APK
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Получить проект
+        uses: actions/checkout@v4
+
+      - name: Установить Godot
+        uses: chickensoft-games/setup-godot@v1
+        with:
+          version: 4.3.0
+          use-dotnet: false
+
+      - name: Собрать APK
+        run: |
+          mkdir -p build
+          godot --headless --path . --export-debug "Android" build/MobileTycoon.apk
+
+      - name: Сохранить APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: Mobile-Tycoon-APK
+          path: build/MobileTycoon.apk
